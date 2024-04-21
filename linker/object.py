@@ -2,7 +2,9 @@
 Defines the type for the object format and the various sections such as segments, symbols and relocations.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+MAGIC_NUMBER = "LINK"
 
 
 @dataclass
@@ -18,7 +20,7 @@ class Segment:
     base: int
     size: int
     flags: str
-    data: bytes = b""
+    data: bytes = field(init=False, default=b"")
 
 
 @dataclass

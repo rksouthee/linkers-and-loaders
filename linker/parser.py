@@ -8,9 +8,8 @@ from operator import attrgetter
 from typing import Any, Iterable, Iterator, NamedTuple, TypeVar
 
 from .errors import LinkError, ParseError
-from .object import Segment, Symbol, Relocation, Object
+from .object import Segment, Symbol, Relocation, Object, MAGIC_NUMBER
 
-MAGIC_NUMBER = "LINK"
 COMMENT_LEADER = "#"
 
 T = TypeVar("T", Segment, Symbol, Relocation)
