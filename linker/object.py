@@ -21,6 +21,10 @@ class Segment:
     size: int
     flags: str
     data: bytes = field(init=False, default=b"")
+    oldbase: int = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.oldbase = self.base
 
 
 @dataclass

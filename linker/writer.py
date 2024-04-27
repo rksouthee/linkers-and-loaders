@@ -1,6 +1,7 @@
 """
 Functions for dumping an object file to an ascii string.
 """
+
 from dataclasses import fields, Field
 from operator import attrgetter
 from typing import cast, Iterable, Iterator, TypeVar

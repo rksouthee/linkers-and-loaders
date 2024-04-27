@@ -2,12 +2,7 @@
 Functions for parsing and dumping `Object`s.
 """
 
-from .object import Object
-from .parser import parse_object_from_lines
-from .writer import dump_object
+from .object import Object, Segment
+from .utils import read_object, write_object, roundup
 
-__all__ = (
-    "Object",
-    "parse_object_from_lines",
-    "dump_object",
-)
+__all__ = ("Object", "Segment", "read_object", "write_object", "roundup")
