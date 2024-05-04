@@ -21,10 +21,21 @@ class Segment:
     size: int
     flags: str
     data: bytes = field(init=False, default=b"")
-    oldbase: int = field(init=False)
+    oldbase: int = field(init=False, compare=False)
 
     def __post_init__(self) -> None:
         self.oldbase = self.base
+
+    @property
+    def end(self) -> int:
+        """
+        Return the address of the end of the segment.
+
+        The address is based of the 'base'.
+
+        :return: the end of the segment.
+        """
+        return self.base + self.size
 
 
 @dataclass

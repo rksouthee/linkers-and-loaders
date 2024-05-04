@@ -8,7 +8,7 @@ from typing import Iterable
 import typer
 
 from linker import Object, roundup
-from project_4_1 import main, _link_segments, _group_segments
+from project_4_1 import main, link_segments, _group_segments
 import project_4_1
 
 
@@ -51,9 +51,9 @@ def link(objects: list[Object], name: str) -> Object:
     :return: the linked object.
     """
     segments = _group_segments(objects)
-    text = _link_segments(segments, ".text", 0x1000, "R", 0x4)
-    data = _link_segments(segments, ".data", roundup(text.base + text.size, 0x1000), "RW", 0x4)
-    bss = _link_segments(segments, ".bss", roundup(data.base + data.size, 0x4), "RW", 0x4)
+    text = link_segments(segments, ".text", 0x1000, "R", 0x4)
+    data = link_segments(segments, ".data", roundup(text.base + text.size, 0x1000), "RW", 0x4)
+    bss = link_segments(segments, ".bss", roundup(data.base + data.size, 0x4), "RW", 0x4)
     bss.size = _calculate_common_block_size(objects, bss.size, 0x4)
     return Object(name, [text, data, bss], [], [])
 
