@@ -3,6 +3,7 @@ Defines the type for the object format and the various sections such as segments
 """
 
 from dataclasses import dataclass, field
+from typing import Optional
 
 MAGIC_NUMBER = "LINK"
 
@@ -51,6 +52,7 @@ class Symbol:
     value: int
     seg: int
     type: str
+    obj: Optional["Object"] = field(init=False, default=None, compare=False)
 
 
 @dataclass
@@ -78,3 +80,7 @@ class Object:
     segs: list[Segment]
     syms: list[Symbol]
     rels: list[Relocation]
+
+    def __post_init__(self) -> None:
+        for sym in self.syms:
+            sym.obj = self
