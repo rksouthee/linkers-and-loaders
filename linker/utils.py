@@ -3,6 +3,7 @@ Some helper functions.
 """
 
 from pathlib import Path
+from typing import TypedDict
 
 from .errors import LinkError, ParseError
 from .object import Object
@@ -51,3 +52,17 @@ def write_object(obj: Object, path: Path) -> None:
     """
     with open(path, mode="w", encoding="ascii") as file:
         file.write(dump_object(obj))
+
+
+class SegmentGroup(TypedDict):
+    """
+    Segment group dictionary.
+
+    Segments can be put in to one of three categories
+        - text: read only data
+        - data: read-write data
+        - bss: read-write data, not present
+    """
+    text: list[str]
+    data: list[str]
+    bss: list[str]

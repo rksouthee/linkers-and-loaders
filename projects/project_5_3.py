@@ -1,154 +1,37 @@
-from collections import defaultdict
+"""
+Project 5.3
+"""
+
 from itertools import chain
-from operator import attrgetter
 from pathlib import Path
-from typing import Iterable, Iterator, Literal, TypedDict
+from typing import Iterable
 
 import typer
+from linker import Object, Segment, Symbol, read_object, roundup, write_object
 
-from linker import Object, Segment, Symbol, read_object, write_object, roundup
-from linker.errors import LinkError
-
-from .project_4_1 import link_segments
-
-
-class SegmentGroup(TypedDict):
-    text: list[str]
-    data: list[str]
-    bss: list[str]
-
-
-def make_default_groups() -> SegmentGroup:
-    return {"text": [".text"], "data": [".data"], "bss": [".bss", ".common"]}
-
-
-def iter_segs(objs: Iterable[Object]) -> Iterator[Segment]:
-    for obj in objs:
-        yield from obj.segs
-
-
-def iter_syms(objs: Iterable[Object]) -> Iterator[Symbol]:
-    for obj in objs:
-        yield from obj.syms
-
-
-def get_group(flags: str) -> Literal["text", "data", "bss"]:
-    if "P" not in flags:
-        return "bss"
-    if "W" in flags:
-        return "data"
-    return "text"
-
-
-def group_segments_by_name(segs: Iterable[Segment]) -> dict[str, list[Segment]]:
-    names = defaultdict(list)
-    for seg in segs:
-        names[seg.name].append(seg)
-    return names
-
-
-def validate_segment_types(segs: Iterable[Segment], group: str) -> None:
-    for seg in segs:
-        if (this_group := get_group(seg.flags)) != group:
-            raise LinkError(
-                f"{seg.name} type mismatch (expected {group}, got {this_group})"
-            )
-
-
-def types_from_groups(groups: SegmentGroup) -> Iterator[tuple[str, str]]:
-    yield from ((name, "text") for name in groups["text"])
-    yield from ((name, "data") for name in groups["data"])
-    yield from ((name, "bss") for name in groups["bss"])
-
-
-def group_segments_by_type(names: dict[str, list[Segment]], groups: SegmentGroup) -> SegmentGroup:
-    types = dict(types_from_groups(groups))
-    for name, segs in names.items():
-        if not segs:
-            continue
-        if name not in types:
-            group = get_group(segs[0].flags)
-            types[name] = group
-            groups[group].append(name)
-        validate_segment_types(segs, types[name])
-    return groups
-
-
-def group_symbols_by_name(syms: Iterable[Symbol]) -> dict[str, list[Symbol]]:
-    symtab = defaultdict(list)
-    for sym in syms:
-        symtab[sym.name].append(sym)
-    return symtab
-
-
-def partition_symbols(syms: Iterable[Symbol]) -> tuple[list[Symbol], list[Symbol]]:
-    d, u = [], []
-    for sym in syms:
-        if "D" in sym.type:
-            d.append(sym)
-        else:
-            u.append(sym)
-    return d, u
-
-
-def reduce_symbol(syms: Iterable[Symbol]) -> Symbol:
-    d, u = partition_symbols(syms)
-    if d:
-        if len(d) > 1:
-            raise LinkError("multiply defined symbol")
-        return d[0]
-    if u:
-        return max(u, key=attrgetter("value"))
-    raise LinkError("undefined symbol")
-
-
-def reduce_symbols(symtab: dict[str, list[Symbol]]) -> Iterator[tuple[str, Symbol]]:
-    for name, syms in symtab.items():
-        yield name, reduce_symbol(syms)
-
-
-def create_common_segment(syms: Iterable[Symbol]) -> Segment:
-    size = 0
-    for sym in filter(lambda x: "D" not in x.type, syms):
-        size = roundup(size, 0x4) + sym.value
-    return Segment(".common", 0, size, "RW")
-
-
-def create_symbol_table(syms: Iterable[Symbol]) -> dict[str, Symbol]:
-    return dict(reduce_symbols(group_symbols_by_name(syms)))
-
-
-def link_group(
-    names: Iterable[str], segs: dict[str, list[Segment]], addr: int, flags: str
-) -> Iterator[Segment]:
-    for name in names:
-        addr = roundup(addr, 0x4)
-        seg = link_segments(segs, name, addr, flags, 0x4)
-        yield seg
-        addr += seg.size
-
-
-def find_seg_index(segs: Iterable[Segment], name: str) -> int:
-    for idx, seg in enumerate(segs):
-        if seg.name == name:
-            return idx
-    return -1
-
-
-def resolve_sym(sym: Symbol, segs: list[Segment]) -> None:
-    assert sym.obj is not None
-    seg = sym.obj.segs[sym.seg]
-    offset = seg.base - seg.oldbase
-    sym.value += offset
-    sym.seg = find_seg_index(segs, seg.name)
-
-
-def resolve_symbols(syms: Iterable[Symbol], segs: list[Segment]) -> None:
-    for sym in filter(lambda sym: "D" in sym.type, syms):
-        resolve_sym(sym, segs)
+from .project_4_3 import (
+    create_common_segment,
+    create_symbol_table,
+    group_segments_by_name,
+    group_segments_by_type,
+    iter_segs,
+    iter_syms,
+    link_group,
+    make_default_groups,
+)
+from .project_5_2 import find_seg_index, resolve_symbols
 
 
 def resolve_common_symbols(syms: Iterable[Symbol], seg: Segment, index: int) -> None:
+    """
+    Resolve common symbols.
+
+    This function will resolve common symbols by assigning them to the next available address in the common segment.
+
+    :param syms: An iterable of symbols.
+    :param seg: The common segment.
+    :param index: The index of the common segment.
+    """
     addr = seg.base
     for sym in filter(lambda sym: "U" in sym.type, syms):
         size = sym.value
@@ -160,6 +43,13 @@ def resolve_common_symbols(syms: Iterable[Symbol], seg: Segment, index: int) -> 
 
 
 def link(objs: list[Object], path: Path) -> Object:
+    """
+    Link a list of objects.
+
+    :param objs: The list of objects to link.
+    :param path: The path to write the linked object to.
+    :return: The linked object.
+    """
     symtab = create_symbol_table(iter_syms(objs))
     common_seg = create_common_segment(symtab.values())
     names = group_segments_by_name(chain(iter_segs(objs), [common_seg]))
@@ -169,13 +59,21 @@ def link(objs: list[Object], path: Path) -> Object:
     segs.extend(link_group(types["data"], names, roundup(segs[-1].end, 0x1000), "RWP"))
     segs.extend(link_group(types["bss"], names, segs[-1].end, "RW"))
     resolve_symbols(symtab.values(), segs)
-    resolve_common_symbols(symtab.values(), common_seg, find_seg_index(segs, common_seg.name))
+    resolve_common_symbols(
+        symtab.values(), common_seg, find_seg_index(segs, common_seg.name)
+    )
     return Object(path.stem, segs, list(symtab.values()), [])
 
 
 if __name__ == "__main__":  # pragma: no cover
 
     def main(inputs: list[Path], output: Path) -> None:
+        """
+        Link a list of objects.
+
+        :param inputs: The list of objects to link.
+        :param output: The path to write the linked object to.
+        """
         objs = map(read_object, inputs)
         obj = link(list(objs), output)
         write_object(obj, output)

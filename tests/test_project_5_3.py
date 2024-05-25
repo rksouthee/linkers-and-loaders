@@ -14,15 +14,15 @@ def main() -> Object:
         [
             Segment(".text", 0, 0x230, "RP"),
             Segment(".data", 0x1000, 0x123, "RWP"),
-            Segment(".bss", 0x1124, 0x31a, "RW")
+            Segment(".bss", 0x1124, 0x31A, "RW"),
         ],
         [
             Symbol("main", 0x20, 0, "D"),
             Symbol("val", 0x1034, 1, "D"),
-            Symbol("junk", 0x83a, 0, "U"),
+            Symbol("junk", 0x83A, 0, "U"),
         ],
-        []
-        )
+        [],
+    )
 
 
 @pytest.fixture
@@ -33,15 +33,15 @@ def mass() -> Object:
             Segment(".text", 0, 0x1138, "RP"),
             Segment(".debug", 0x1138, 0x12, "RP"),
             Segment(".data", 0x2000, 0x23, "RWP"),
-            Segment(".bss", 0x2024, 0x31af, "RW"),
+            Segment(".bss", 0x2024, 0x31AF, "RW"),
         ],
         [
             Symbol("add", 0x1013, 0, "D"),
-            Symbol("g_name", 0x113d, 1, "D"),
-            Symbol("junk", 0x1ac, 0, "U"),
+            Symbol("g_name", 0x113D, 1, "D"),
+            Symbol("junk", 0x1AC, 0, "U"),
         ],
-        []
-        )
+        [],
+    )
 
 
 def test_link(main: Object, mass: Object) -> None:
@@ -56,7 +56,7 @@ def test_link(main: Object, mass: Object) -> None:
     assert obj.syms[3].value == 0x2243
     assert obj.syms[3].seg == 0
     assert obj.syms[4].name == "g_name"
-    assert obj.syms[4].value == 0x236d
+    assert obj.syms[4].value == 0x236D
     assert obj.syms[4].seg == 1
     assert obj.syms[2].name == "junk"
     assert obj.syms[2].value == 0x6614

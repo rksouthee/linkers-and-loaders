@@ -20,31 +20,31 @@ from linker.parser import (
 )
 
 
-class TestIsMagicNumber:
-    data = [
+@pytest.mark.parametrize(
+    "line,expected",
+    [
         ("link", False),
         ("LINK\n", False),
         (" LINK", False),
         ("LINK#1", False),
         ("LINK", True),
-    ]
+    ],
+)
+def test_is_magic_number(line: str, expected: bool) -> None:
+    assert is_magic_number(line) == expected
 
-    @pytest.mark.parametrize("line,expected", data, scope="class")
-    def test_is_magic_number(self, line: str, expected: bool) -> None:
-        assert is_magic_number(line) == expected
 
-
-class TestIsComment:
-    data = [
+@pytest.mark.parametrize(
+    "line,expected",
+    [
         ("# 1 2 3", True),
         (" #123", False),
         ("#123\n", True),
         ("LINK#", False),
-    ]
-
-    @pytest.mark.parametrize("line,expected", data, scope="class")
-    def test_is_comment(self, line: str, expected: bool) -> None:
-        assert is_comment(line) == expected
+    ],
+)
+def test_is_comment(line: str, expected: bool) -> None:
+    assert is_comment(line) == expected
 
 
 @pytest.fixture
@@ -137,13 +137,19 @@ def test_parse_data() -> None:
     assert seg.data == b"\xde\xad\xbe\xef"
 
     line = Line(12, "fast")
-    with pytest.raises(ParseError, match=re.escape("failed to parse data for '.text': ")):
+    with pytest.raises(
+        ParseError, match=re.escape("failed to parse data for '.text': ")
+    ):
         parse_data(line, seg)
 
 
 def test_parse_segment_data() -> None:
     lines = [Line(3, "deadbeef"), Line(4, "1234")]
-    segs = [Segment(".text", 0, 0x4, "RP"), Segment(".bss", 0x10, 0x123, "RW"), Segment(".data", 0x200, 0x2, "RWP")]
+    segs = [
+        Segment(".text", 0, 0x4, "RP"),
+        Segment(".bss", 0x10, 0x123, "RW"),
+        Segment(".data", 0x200, 0x2, "RWP"),
+    ]
     parse_segment_data(iter(lines), segs)
     assert segs[0].data == b"\xde\xad\xbe\xef"
     assert segs[2].data == b"\x12\x34"

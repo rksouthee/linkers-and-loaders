@@ -108,9 +108,7 @@ def test_group_segments_by_type_empty() -> None:
 def test_group_segments_by_type_mismatch() -> None:
     seg = Segment(".text", 0, 10, "RW")
     names = {seg.name: [seg]}
-    with pytest.raises(
-        LinkError, match=re.escape(".text type mismatch (expected text, got bss)")
-    ):
+    with pytest.raises(LinkError, match=re.escape(".text type mismatch (expected text, got bss)")):
         group_segments_by_type(names, make_default_groups())
 
 
