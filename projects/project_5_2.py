@@ -9,7 +9,7 @@ import typer
 from linker import Object, Segment, Symbol, read_object, write_object, roundup
 from linker.errors import LinkError
 
-from project_4_1 import link_segments
+from .project_4_1 import link_segments
 
 
 class SegmentGroup(TypedDict):
@@ -128,6 +128,26 @@ def link_group(
         addr += seg.size
 
 
+def find_seg_index(segs: Iterable[Segment], name: str) -> int:
+    for idx, seg in enumerate(segs):
+        if seg.name == name:
+            return idx
+    return -1
+
+
+def resolve_sym(sym: Symbol, segs: list[Segment]) -> None:
+    assert sym.obj is not None
+    seg = sym.obj.segs[sym.seg]
+    offset = seg.base - seg.oldbase
+    sym.value += offset
+    sym.seg = find_seg_index(segs, seg.name)
+
+
+def resolve_symbols(syms: Iterable[Symbol], segs: list[Segment]) -> None:
+    for sym in filter(lambda sym: "D" in sym.type, syms):
+        resolve_sym(sym, segs)
+
+
 def link(objs: list[Object], path: Path) -> Object:
     symtab = create_symbol_table(iter_syms(objs))
     names = group_segments_by_name(
@@ -138,7 +158,8 @@ def link(objs: list[Object], path: Path) -> Object:
     segs.extend(link_group(types["text"], names, 0x1000, "RP"))
     segs.extend(link_group(types["data"], names, roundup(segs[-1].end, 0x1000), "RWP"))
     segs.extend(link_group(types["bss"], names, segs[-1].end, "RW"))
-    return Object(path.stem, segs, [], [])
+    resolve_symbols(symtab.values(), segs)
+    return Object(path.stem, segs, list(symtab.values()), [])
 
 
 if __name__ == "__main__":  # pragma: no cover

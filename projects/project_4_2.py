@@ -7,9 +7,9 @@ from typing import Iterable
 
 import typer
 
+import projects.project_4_1
 from linker import Object, roundup
-from project_4_1 import main, link_segments, _group_segments
-import project_4_1
+from .project_4_1 import main, link_segments, _group_segments
 
 
 def _find_common_block_syms(objects: Iterable[Object]) -> dict[str, int]:
@@ -59,5 +59,5 @@ def link(objects: list[Object], name: str) -> Object:
 
 
 if __name__ == "__main__":
-    project_4_1.link = link
+    projects.project_4_1.link = link
     typer.run(main)

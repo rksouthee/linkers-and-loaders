@@ -6,7 +6,7 @@ import pytest
 from linker import Object, Symbol, Segment
 from linker.errors import LinkError
 
-from project_4_3 import (
+from projects.project_4_3 import (
     make_default_groups,
     iter_segs,
     iter_syms,
@@ -195,5 +195,5 @@ def test_link(objs: list[Object]) -> None:
         Segment(".bss", 0x2004, 3, "RW"),
         Segment(".common", 0x2008, 0xA, "RW"),
     ]
-    assert obj.syms == []
-    assert obj.rels == []
+    assert not obj.syms
+    assert not obj.rels

@@ -158,4 +158,4 @@ def test_parse_object_from_str(main: str) -> None:
         Segment(".bss", 0x2320, 0x50, "RW"),
     ]
     assert obj.syms == [Symbol("main", 0, 1, "D"), Symbol("wiggleroom", 0x100, 0, "U")]
-    assert obj.rels == []
+    assert not obj.rels

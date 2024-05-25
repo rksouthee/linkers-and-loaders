@@ -9,7 +9,7 @@ import typer
 from linker import Object, Segment, Symbol, read_object, write_object, roundup
 from linker.errors import LinkError
 
-from project_4_1 import link_segments
+from .project_4_1 import link_segments
 
 
 class SegmentGroup(TypedDict):
@@ -29,9 +29,7 @@ def iter_segs(objs: Iterable[Object]) -> Iterator[Segment]:
 
 def iter_syms(objs: Iterable[Object]) -> Iterator[Symbol]:
     for obj in objs:
-        for sym in obj.syms:
-            sym.obj = obj
-            yield sym
+        yield from obj.syms
 
 
 def get_group(flags: str) -> Literal["text", "data", "bss"]:

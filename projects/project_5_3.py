@@ -9,7 +9,7 @@ import typer
 from linker import Object, Segment, Symbol, read_object, write_object, roundup
 from linker.errors import LinkError
 
-from project_4_1 import link_segments
+from .project_4_1 import link_segments
 
 
 class SegmentGroup(TypedDict):

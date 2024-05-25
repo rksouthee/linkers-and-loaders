@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Iterable, Iterator
+from typing import Iterator
 
 import typer
 

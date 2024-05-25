@@ -4,7 +4,7 @@ import pytest
 
 from linker import Object, Segment, Symbol
 
-from project_5_2 import link
+from projects.project_5_2 import link
 
 
 @pytest.fixture

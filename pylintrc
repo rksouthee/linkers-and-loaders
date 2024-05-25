@@ -1,2 +1,5 @@
+[MASTER]
+load-plugins=pylint_pytest
+
 [MAIN]
 max-line-length=132
