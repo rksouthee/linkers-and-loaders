@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ### Running tests
 
 ```sh
-pytest tests
+pytest
 ```
 
 ### Running project
