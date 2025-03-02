@@ -9,6 +9,10 @@
 
 [A Machine-Independent Linker](https://www.researchgate.net/publication/220281730_A_Machine-Independent_Linker)
 
+A textual format might be useful for intermediate representations, replacing ELF/COFF/Mach-O with text would likely be
+impractical due to performance concerns. A hybrid approach (e.g., keeping a binary format for execution but using a
+textual format for debugging and intermediate stages) might be feasible.
+
 ## Project
 
 ### Project 3.1
