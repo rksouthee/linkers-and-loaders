@@ -21,7 +21,7 @@
 > [!NOTE]
 > Instead of using Perl I'll be doing the project in Python.
 
-[Project 3.1](projects/project_3_1.py)
+[Project 3.1](../projects/project_3_1.py)
 
 #### Usage
 
