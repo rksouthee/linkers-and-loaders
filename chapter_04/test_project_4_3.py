@@ -6,7 +6,7 @@ import pytest
 from linker import Object, Symbol, Segment
 from linker.errors import LinkError
 
-from projects.project_4_3 import (
+from .project_4_3 import (
     make_default_groups,
     iter_segs,
     iter_syms,
