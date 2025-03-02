@@ -20,3 +20,23 @@
 
 > [!NOTE]
 > Instead of using Perl I'll be doing the project in Python.
+
+[Project 3.1](projects/project_3_1.py)
+
+#### Usage
+
+```sh
+python projects\project_3_1.py ch4main.lk ch4main_copy.lk
+```
+
+Running the previous command will output
+
+```txt
+LINK
+3 2 0
+.text 0 1017 R
+.data 2000 320 RW
+.bss 2320 50 RW
+main 0 1 D
+wiggleroom 100 0 U
+```
