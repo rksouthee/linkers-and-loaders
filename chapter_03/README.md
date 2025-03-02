@@ -26,7 +26,7 @@
 #### Usage
 
 ```sh
-python projects\project_3_1.py ch4main.lk ch4main_copy.lk
+python project_3_1.py ..\ch4main.lk ..\ch4main_copy.lk
 ```
 
 Running the previous command will output

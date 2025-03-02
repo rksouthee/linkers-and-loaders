@@ -36,8 +36,8 @@ I need the project modules to access the `linker` module but I don't know a clea
 need to set the `PYTHONPATH` environment variable to point to the root directory so that the `linker` module is found.
 
 ```sh
-set PYTHONPATH=.
-python projects\project_3_1.py ch4main.lk ch4main_copy.lk
+set PYTHONPATH=%CD%
+python chapter_03\project_3_1.py ch4main.lk ch4main_copy.lk
 ```
 
 ## Resources
