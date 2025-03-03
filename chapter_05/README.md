@@ -8,6 +8,17 @@
 > they take to compile. Change them so the mangled names differ in the first few characters. Time a compile and link
 > again. Do you need a new linker?
 
+I didn't notice much of a difference between the two test cases. I suspect modern compiler toolchains have efficient
+symbol tables.  Can run
+
+```sh
+exercise_5_1 100000 prefix
+exercise_5_1 100000 postfix
+```
+
+to generate the C++ source files and time compiling and linking them. Both versiosn took around ~13 seconds to compile
+and link on my machine.
+
 ### Exercise 5.2
 
 > Investigate the debug symbol format that your favorite linker uses. (Some on-line resources are listed in the
