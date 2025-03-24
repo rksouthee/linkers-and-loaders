@@ -25,6 +25,17 @@ and link on my machine.
 > references.) Write a program to dump the debugging symbols from an object file and see how much of the source program
 > you can reconstruct from it.
 
+The file, `dump_object.cpp`, contains code to dump the debugging information from a COFF object file. Windows COFF uses
+the CodeView debug format.
+
+The following example will build the program and a an object file we can inspect, and run the program to dump the debug
+information to a file.
+
+```sh
+nmake all
+dump_object.exe example.obj > debug.txt
+```
+
 ## Project
 
 ### Project 5.1
