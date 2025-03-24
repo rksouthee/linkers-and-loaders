@@ -5,3 +5,9 @@ postfix.cpp
 postfix.exe
 postfix.obj
 main.obj
+dump_object.exe
+dump_object.ilk
+dump_object.obj
+dump_object.pdb
+example.obj
+vc140.pdb
