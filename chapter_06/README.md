@@ -35,6 +35,10 @@ be broken.
 > Some library formats put the directory at the front of the library while others put it at the end. What practical
 > difference does it make?
 
+Symbol lookup might be quicker if the directory is at the front of the library since it doesn't need to read in the
+whole file. Having the directory at the back may help speedup updates since it may not need to reorganize the entire
+file.
+
 ### Exercise 6.5
 
 > Describe some other situations where weak externals and weak definitions are useful.
