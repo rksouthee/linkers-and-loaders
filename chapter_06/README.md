@@ -17,6 +17,10 @@ are weak the linker can use either one or report this as another error case.
 > Library symbol directories generally include only defined global symbols. Would it be useful to include undefined
 > symbols as well?
 
+I'm ont sure on this, including undefined symbols would increase the size of the symbol directory which may not be
+desired. Including undefined symbols may help provide diagnostics if we know that certain libraries are looking for
+particular symbols.
+
 ### Exercise 6.3
 
 > When sorting object files using lorder and tsort, it's possible that tsort won't be able to come up with a total
