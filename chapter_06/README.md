@@ -6,6 +6,12 @@
 
 > What should a linker do if two modules in different libraries define the symbol? Is it an error?
 
+If two libraries define the same strong symbol, then this should be considered an error. Some linkers, `ld`, have an
+option, `--allow-multiple-definition` that allows multiple definitions and the first definition will be used.
+
+If at least one of the definitions is marked as a weak symbol the linker can use the strong symbol. If both symbols
+are weak the linker can use either one or report this as another error case.
+
 ### Exercise 6.2
 
 > Library symbol directories generally include only defined global symbols. Would it be useful to include undefined
