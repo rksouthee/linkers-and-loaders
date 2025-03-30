@@ -43,6 +43,11 @@ file.
 
 > Describe some other situations where weak externals and weak definitions are useful.
 
+Another case where a weak definition might be useful is providing a default implementation that can be overriden
+depending on the operating system or architecture. For example one could provide a default implementation of some
+algorithm, and on x64 provide an implementation that uses vector instructions. Any new platforms that would be added
+could use the fallback implementation or provide their own specific implementation.
+
 ## Project
 
 ### Project 6.1
