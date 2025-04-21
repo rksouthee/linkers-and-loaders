@@ -63,6 +63,7 @@ class SegmentGroup(TypedDict):
         - data: read-write data
         - bss: read-write data, not present
     """
+
     text: list[str]
     data: list[str]
     bss: list[str]

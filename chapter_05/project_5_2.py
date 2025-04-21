@@ -80,6 +80,7 @@ def link(objs: list[Object], path: Path) -> Object:
 
 
 if __name__ == "__main__":  # pragma: no cover
+
     def main(inputs: list[Path], output: Path) -> None:
         """
         Link a list of objects.

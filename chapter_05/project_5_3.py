@@ -59,9 +59,7 @@ def link(objs: list[Object], path: Path) -> Object:
     segs.extend(link_group(types["data"], names, roundup(segs[-1].end, 0x1000), "RWP"))
     segs.extend(link_group(types["bss"], names, segs[-1].end, "RW"))
     resolve_symbols(symtab.values(), segs)
-    resolve_common_symbols(
-        symtab.values(), common_seg, find_seg_index(segs, common_seg.name)
-    )
+    resolve_common_symbols(symtab.values(), common_seg, find_seg_index(segs, common_seg.name))
     return Object(path.stem, segs, list(symtab.values()), [])
 
 

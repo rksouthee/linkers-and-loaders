@@ -5,6 +5,7 @@ Project 6.1
 import sys
 from pathlib import Path
 from typing import Iterator
+from typing_extensions import Annotated
 
 import typer
 from linker import Object, Symbol, read_object, write_object
@@ -51,16 +52,17 @@ def create_library(objs: list[Object], path: Path) -> None:
     map_lines: list[str] = []
     for obj in objs:
         write_object(obj, path / obj.name)
-        map_lines.append(
-            obj.name + " " + " ".join(map(lambda sym: sym.name, defined_syms(obj)))
-        )
+        map_lines.append(obj.name + " " + " ".join(map(lambda sym: sym.name, defined_syms(obj))))
     with open(path / "MAP", mode="w", encoding="ascii") as fh:
         fh.write("\n".join(map_lines))
 
 
 if __name__ == "__main__":
 
-    def main(inputs: list[Path], output: Path) -> None:
+    def main(
+        inputs: list[Path],
+        output: Annotated[Path, typer.Option(help="output directory path")],
+    ) -> None:
         """
         Link the input objects into a library.
 

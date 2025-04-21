@@ -137,9 +137,7 @@ def test_parse_data() -> None:
     assert seg.data == b"\xde\xad\xbe\xef"
 
     line = Line(12, "fast")
-    with pytest.raises(
-        ParseError, match=re.escape("failed to parse data for '.text': ")
-    ):
+    with pytest.raises(ParseError, match=re.escape("failed to parse data for '.text': ")):
         parse_data(line, seg)
 
 
