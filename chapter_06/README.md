@@ -82,3 +82,5 @@ could use the fallback implementation or provide their own specific implementati
 > Extend the linker to handle file format libraries. When the linker encounters a library in its listof input files,
 > search the library and include each module in the library that defines an undefined symbol. You'll have to modify
 > your routines that read object files so that they can read an object module from the middle of a library.
+
+[Project 6.4](project_6_4.py)
