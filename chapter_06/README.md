@@ -64,6 +64,8 @@ could use the fallback implementation or provide their own specific implementati
 > files, search the library and include each module in the library that defines an undefined symbol. Be sure you
 > correctly handle library modules that depend on symbols defined in other library members.
 
+[Project 6.2](project_6_2.py)
+
 ### Project 6.3
 
 > Write a librarian that creates a file format library from a set of object files. Note that you can't correctly write
@@ -72,6 +74,8 @@ could use the fallback implementation or provide their own specific implementati
 > collecting the sizes of the input files and computing the size; or buffering the entire file in main memory.
 > Optionally, extend the librarian to update an existing library (note that it's a lot harder than updating a directory
 > format library).
+
+[Project 6.3](project_6_3.py)
 
 ### Project 6.4
 
